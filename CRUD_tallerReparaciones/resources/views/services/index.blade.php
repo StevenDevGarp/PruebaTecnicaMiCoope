@@ -168,33 +168,93 @@ footer {
 
 /* Card Styles */
 .contenido {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin-top: 20px;
-}
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
 
-.card {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 300px;
-    margin: 10px;
-    padding: 20px;
-    text-align: left;
-}
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            margin: 10px;
+            padding: 20px;
+            text-align: left;
+        }
 
-.card strong {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-}
+        .card strong {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
 
-.card p {
-    margin: 0 0 10px;
-}
+        .card p {
+            margin: 0 0 10px;
+        }
 
+        .card .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .card .actions a,
+        .card .actions form {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .card .actions form {
+            margin: 0;
+        }
+
+        .card .actions button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .card .actions button:hover {
+            background-color: #c82333;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .services {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 20px;
+            }
+
+            .cta-button {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -235,14 +295,35 @@ footer {
         </div> -->
     </section>
     <div class="contenido">
-            @if($clients->isEmpty())
-                <p>No hay clientes registrados.</p>
+            @if($services->isEmpty())
+                <p>No hay servicios registrados.</p>
             @else
-                @foreach($clients as $cliente)
+                @foreach($services as $service)
                     <div class="card">
-                        <strong>Nombre:</strong> {{ $cliente->nombre }} <br>
-                        <strong>Teléfono:</strong> {{ $cliente->telefono }} <br>
-                        <strong>Correo electrónico:</strong> {{ $cliente->email }} <br>
+                        <strong>Cliente:</strong> {{ $service->cliente->nombre }} <br>
+                        <strong>Teléfono:</strong> {{ $service->cliente->telefono }} <br>
+                        <strong>Correo electrónico:</strong> {{ $service->cliente->email }} <br>
+                        <hr>
+                        <strong>Equipo:</strong> {{ $service->equipo->tipo }} - {{ $service->equipo->modelo }} <br>
+                        <strong>Marca:</strong> {{ $service->equipo->marca->nombre }} <br>
+                        <hr>
+                        <strong>Técnico:</strong> {{ $service->tecnico->nombre }} <br>
+                        <strong>Teléfono:</strong> {{ $service->tecnico->telefono }} <br>
+                        <strong>Correo electrónico:</strong> {{ $service->tecnico->email }} <br>
+                        <hr>
+                        <strong>Fecha de Recepción:</strong> {{ $service->fecha_recepcion }} <br>
+                        <strong>Problema:</strong> {{ $service->problema }} <br>
+                        <strong>Diagnóstico:</strong> {{ $service->diagnostico }} <br>
+                        <strong>Solución:</strong> {{ $service->solucion }} <br>
+                        <strong>Estado:</strong> {{ $service->estado }} <br>
+                        <div class="actions">
+                            <a href="{{ route('servicios.edit', $service->servicio_id) }}" class="btn btn-primary">Editar</a>
+                            <form action="{{ route('servicios.destroy', $service->servicio_id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit">Eliminar</button>
+                            </form>
+                        </div>
                     </div>
                 @endforeach
             @endif
